@@ -1,6 +1,6 @@
 
 # MyFASTAPI
-# New Changes
+# New Changes1
 
 A production-grade FastAPI application using Async SQLAlchemy, Pydantic, and PostgreSQL.
 
@@ -15,7 +15,7 @@ A production-grade FastAPI application using Async SQLAlchemy, Pydantic, and Pos
 ## Requirements
 
 - Python 3.10+
-- PostgreSQL Database
+- PostgreSQL DatabaseS
 
 ## Installation & Setup
 
