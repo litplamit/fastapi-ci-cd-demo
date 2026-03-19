@@ -96,3 +96,24 @@ MyFASTAPI/
 ├── .gitignore
 └── requirements.txt
 ```
+
+
+## Docker Setup
+
+1. **Build the Docker Image**:
+   ```sh
+   docker build -t myfastapi-api .
+   ```
+
+2. **Run the Docker Container**:
+   ```sh
+   docker run --env-file .env -p 8000:8000 myfastapi-api
+   ```
+3. **docker compose up**   
+   ```sh
+   docker compose up
+   ```
+4. **docker compose down**   
+   ```sh
+   docker compose down
+   ```
