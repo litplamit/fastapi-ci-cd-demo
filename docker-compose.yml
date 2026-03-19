@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: my-fastapi-server
+    
+    # Map port 8000 on your machine to port 8000 in the container
+    ports:
+      - "8000:8000"
+      
+    # Pass all variables from .env to the container automatically
+    env_file:
+      - .env
+      
+    # Overwrite the MYSQL_SERVER variable just for this container
+    environment:
+      - MYSQL_SERVER=host.docker.internal
+      
+    # Optional but HIGHLY recommended for local development:
+    # This mounts your local code into the container so you don't have to rebuild 
+    # the image every time you change a Python file!
+    volumes:
+      - ./:/app
+      
+    # Run uvicorn with hot-reloading enabled
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
