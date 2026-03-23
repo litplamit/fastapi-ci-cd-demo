@@ -1,0 +1,33 @@
+name: FastAPI Automated Testing
+
+# This tells the robot exactly WHEN to wake up
+on:
+  push:
+    branches: [ "dev", "staging", "main" ]
+
+jobs:
+  test-the-code:
+    # This spins up an empty Ubuntu Linux machine in the cloud somewhere
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Step 1: Tell the robot to download your code from your branch
+    - name: Download Code
+      uses: actions/checkout@v4
+      
+    # Step 2: Install Python 3.11 on the empty Linux machine
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    # Step 3: Install all your requirements (including pytest)
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    # Step 4: Run the exact same test you just completely on your laptop!
+    - name: Run Pytest
+      run: |
+        python -m pytest
