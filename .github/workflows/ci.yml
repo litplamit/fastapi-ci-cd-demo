@@ -31,3 +31,16 @@ jobs:
     - name: Run Pytest
       run: |
         python -m pytest
+
+    # Step 4: Run the exact same test you just completed on your laptop!
+    - name: Run Pytest
+      run: |
+        python -m pytest
+      env:
+        PROJECT_NAME: "GitHubTesting"
+        MYSQL_USER: "ci_robot"
+        MYSQL_PASSWORD: "fake_password"
+        MYSQL_SERVER: "127.0.0.1"
+        MYSQL_PORT: 3306
+        MYSQL_DB: "fake_db"
+
