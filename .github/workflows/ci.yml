@@ -27,11 +27,6 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt
         
-    # Step 4: Run the exact same test you just completely on your laptop!
-    - name: Run Pytest
-      run: |
-        python -m pytest
-
     # Step 4: Run the exact same test you just completed on your laptop!
     - name: Run Pytest
       run: |
