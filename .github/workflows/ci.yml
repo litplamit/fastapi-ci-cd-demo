@@ -55,4 +55,38 @@ jobs:
         context: .
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+    
+  # --- PHASE 4: AUTOMATED AWS DEPLOYMENT ---
+    
+    # Step 7: SSH into your AWS Server and run commands
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          # 1. Install Docker on the empty server
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo systemctl start docker
+          
+          # 2. Download the brand new image from Docker Hub
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+          
+          # 3. Stop the old server (if one is running)
+          sudo docker stop fastapi-server || true
+          sudo docker rm fastapi-server || true
+          
+          # 4. Start the new server on Port 80 (standard internet traffic port)
+          # We pass fake database passwords here so it doesn't crash on boot!
+          sudo docker run -d --name fastapi-server -p 80:8000 \
+            -e PROJECT_NAME="LiveAWS" \
+            -e MYSQL_USER="dummy" \
+            -e MYSQL_PASSWORD="dummy" \
+            -e MYSQL_SERVER="127.0.0.1" \
+            -e MYSQL_PORT=3306 \
+            -e MYSQL_DB="dummy" \
+            ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+
 
