@@ -78,15 +78,20 @@ jobs:
           sudo docker stop fastapi-server || true
           sudo docker rm fastapi-server || true
           
-          # 4. Start the new server on Port 80 (standard internet traffic port)
-          # We pass fake database passwords here so it doesn't crash on boot!
+          # 4. Create the 'MM_DEV' database (since AWS gives us a totally empty one)
+          sudo docker run --rm \
+            ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest \
+            python -c "import pymysql; conn=pymysql.connect(host='${{ secrets.PROD_DB_HOST }}', user='${{ secrets.PROD_DB_USER }}', password='${{ secrets.PROD_DB_PASSWORD }}'); conn.cursor().execute('CREATE DATABASE IF NOT EXISTS MM_DEV'); conn.close()" || true
+                    
+          # 5. Start the new server wired directly to your cloud RDS database!
           sudo docker run -d --name fastapi-server -p 80:8000 \
             -e PROJECT_NAME="LiveAWS" \
-            -e MYSQL_USER="dummy" \
-            -e MYSQL_PASSWORD="dummy" \
-            -e MYSQL_SERVER="127.0.0.1" \
+            -e MYSQL_USER="${{ secrets.PROD_DB_USER }}" \
+            -e MYSQL_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}" \
+            -e MYSQL_SERVER="${{ secrets.PROD_DB_HOST }}" \
             -e MYSQL_PORT=3306 \
-            -e MYSQL_DB="dummy" \
+            -e MYSQL_DB="MM_DEV" \
             ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+
 
 
